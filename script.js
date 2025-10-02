@@ -8,7 +8,7 @@ console.log("=================================\n");
 // Step 2: Function to get computer choice
 function getComputerChoice() {
     const randomNum = Math.random();
-
+    
     if (randomNum < 0.33) {
         return "rock";
     } else if (randomNum < 0.66) {
@@ -20,7 +20,20 @@ function getComputerChoice() {
 
 // Step 3: Function to get human choice
 function getHumanChoice() {
-    const choice = prompt("Choose: rock, paper or scissors");
+    let choice = prompt("Choose: rock, paper or scissors");
+    
+    // Validate input
+    while (choice !== null && choice.toLowerCase() !== "rock" && 
+           choice.toLowerCase() !== "paper" && choice.toLowerCase() !== "scissors") {
+        console.log(`"${choice}" is not a valid choice. Please try again.`);
+        choice = prompt("Choose: rock, paper or scissors");
+    }
+    
+    // If user cancels, return null
+    if (choice === null) {
+        return null;
+    }
+    
     return choice.toLowerCase();
 }
 
@@ -33,10 +46,10 @@ function playGame() {
     // Step 5: Function to play a single round
     function playRound(humanChoice, computerChoice) {
         humanChoice = humanChoice.toLowerCase();
-
+        
         console.log(`You chose: ${humanChoice}`);
         console.log(`Computer chose: ${computerChoice}`);
-
+        
         if (humanChoice === computerChoice) {
             console.log("It's a tie!");
         } else if (
@@ -50,7 +63,7 @@ function playGame() {
             console.log(`You lose! ${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)} beats ${humanChoice}`);
             computerScore++;
         }
-
+        
         console.log(`Score - You: ${humanScore} | Computer: ${computerScore}\n`);
     }
 
@@ -58,6 +71,13 @@ function playGame() {
     for (let i = 1; i <= 5; i++) {
         console.log(`--- Round ${i} ---`);
         const humanSelection = getHumanChoice();
+        
+        // If user cancels, end the game
+        if (humanSelection === null) {
+            console.log("Game cancelled by user.");
+            return;
+        }
+        
         const computerSelection = getComputerChoice();
         playRound(humanSelection, computerSelection);
     }
@@ -66,7 +86,7 @@ function playGame() {
     console.log("=================================");
     console.log("GAME OVER!");
     console.log(`Final Score - You: ${humanScore} | Computer: ${computerScore}`);
-
+    
     if (humanScore > computerScore) {
         console.log("🎉 YOU WIN THE GAME! 🎉");
     } else if (computerScore > humanScore) {
